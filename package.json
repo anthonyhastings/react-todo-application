@@ -1,0 +1,32 @@
+{
+  "name": "react-todo-list",
+  "version": "1.0.0",
+  "description": "An example to-do list with React.js",
+  "author": "Anthony Hastings <ar.hastings@gmail.com> (https://antwan1986.github.io/)",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "npm run-script html && npm run-script webpack",
+    "html": "copyfiles -f src/*.html dist/",
+    "lint": "eslint --ext .js --ext .jsx src/ webpack.config.js",
+    "pretest": "npm run-script lint",
+    "start": "webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack"
+  },
+  "dependencies": {
+    "react": "15.3.2",
+    "react-dom": "15.3.2"
+  },
+  "devDependencies": {
+    "babel-core": "6.17.0",
+    "babel-loader": "6.2.5",
+    "babel-preset-es2015": "6.16.0",
+    "babel-preset-react": "6.16.0",
+    "copyfiles": "1.0.0",
+    "eslint": "3.7.1",
+    "eslint-plugin-react": "6.3.0",
+    "webpack": "1.13.2",
+    "webpack-dev-server": "1.16.1"
+  }
+}
