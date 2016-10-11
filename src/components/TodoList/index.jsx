@@ -16,6 +16,7 @@ class TodoList extends React.Component {
 
         let listItems = this.props.items.map((item) => {
             let className = 'todo-list__list-item';
+
             className += (item.completed) ? ' item--completed' : '';
 
             return (
