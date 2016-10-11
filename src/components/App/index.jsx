@@ -1,6 +1,7 @@
 import React from 'react';
-import TodoForm from './components/TodoForm';
-import TodoList from './components/TodoList';
+import TodoForm from '../TodoForm';
+import TodoList from '../TodoList';
+require('./styles/index.scss');
 
 class App extends React.Component {
     /**

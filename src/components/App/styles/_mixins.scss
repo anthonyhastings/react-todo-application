@@ -1,0 +1,22 @@
+// Outputs a media query for the selected breakpoint identifier.
+@mixin bp($point) {
+    @if $point == tablet-up {
+        @media (min-width: map-get($bps, tabletUp)) { @content; }
+    }
+}
+
+// A short-handed way of looking up a colour within the nested colour map.
+//
+// Example Mapping:
+// $color: (
+//     caribbeanGreen: (
+//         base: #00BFA5,
+//         light: rgba(#00BFA5, 0.8)
+//     )
+// );
+//
+// Example Usage:
+// background-color: palette(caribbeanGreen, base);
+@function palette($palette, $tone: 'base') {
+    @return map-get(map-get($palettes, $palette), $tone);
+}

@@ -1,0 +1,35 @@
+// --------------------------
+// Includes
+// --------------------------
+
+//@import '../../core/styles/variables';
+//@import '../../core/styles/mixins';
+
+// --------------------------
+// Styles
+// --------------------------
+
+.todo-list__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin-bottom: 3rem;
+    max-width: 30rem;
+
+    @at-root {
+        .todo-list__form-label {
+            margin-bottom: 0.5rem;
+        }
+
+        .todo-list__form-input,
+        .todo-list__form-button {
+            margin-bottom: 1rem;
+        }
+
+        .todo-list__form-error {
+            color: red;
+            font-weight: bold;
+        }
+    }
+}

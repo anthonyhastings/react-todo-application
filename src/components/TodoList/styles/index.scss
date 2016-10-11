@@ -1,0 +1,23 @@
+// --------------------------
+// Includes
+// --------------------------
+
+//@import '../../core/styles/variables';
+//@import '../../core/styles/mixins';
+
+// --------------------------
+// Styles
+// --------------------------
+
+.todo-list__list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+
+    @at-root {
+        .todo-list__list-item:not(:last-child) {
+            margin-bottom: 1rem;
+        }
+    }
+}

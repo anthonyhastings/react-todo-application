@@ -1,4 +1,5 @@
 import React from 'react';
+require('./styles/index.scss');
 
 class TodoForm extends React.Component {
     /**
@@ -28,10 +29,14 @@ class TodoForm extends React.Component {
      */
     render() {
         return (
-            <form ref="itemForm" onSubmit={this.onSubmit}>
-                <label htmlFor="itemInput">Enter item text:</label>
+            <form className="todo-list__form" ref="itemForm" onSubmit={this.onSubmit}>
+                <label className="todo-list__form-label"
+                       htmlFor="itemInput">
+                    Enter item text:
+                </label>
 
                 <input id="itemInput"
+                       className="todo-list__form-input"
                        type="text"
                        ref={(input) => {
                            if (input !== null) {
@@ -42,9 +47,12 @@ class TodoForm extends React.Component {
                        onChange={this.onInputChanged}
                        value={this.state.text} />
 
-                <button type="submit">Add Item</button>
+                <button className="todo-list__form-button"
+                        type="submit">
+                    Add Item
+                </button>
 
-                <span>
+                <span className="todo-list__form-error">
                     {(this.state.dirty
                       && this.state.validity
                       && this.state.validity.valid === false) ?

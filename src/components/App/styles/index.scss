@@ -1,0 +1,58 @@
+// --------------------------
+// Third-party
+// --------------------------
+
+@import 'normalize';
+
+// --------------------------
+// Includes
+// --------------------------
+
+@import 'variables';
+@import 'mixins';
+
+// --------------------------
+// Styles
+// --------------------------
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    font-size: percentage(10 / 16);
+}
+
+body {
+    height: auto;
+    min-height: 100vh;
+
+    @extend %font-body;
+    font-size: 1.6rem;
+    line-height: 1;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    @extend %font-headings;
+    margin: 0;
+}
+
+h1 {
+    font-size: 2.8rem;
+    line-height: 1;
+}
+
+h2 {
+    font-size: 2.4rem;
+    line-height: (36 / 24);
+    margin-bottom: 1.5rem;
+}
+
+[data-view-container] {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+require('./styles/index.scss');
 
 class TodoList extends React.Component {
     /**
@@ -14,8 +15,12 @@ class TodoList extends React.Component {
         let ListType = `${this.props.listType}`;
 
         let listItems = this.props.items.map((item) => {
+            let className = 'todo-list__list-item';
+            className += (item.completed) ? ' item--completed' : '';
+
             return (
-                <li key={item.id} className={(item.completed) ? 'item--completed' : '' }>
+                <li key={item.id}
+                    className={className}>
                     {item.text}
                     <br />
                     <button onClick={this.props.onToggleCompleted.bind(null, item)}>
@@ -27,7 +32,7 @@ class TodoList extends React.Component {
 
         return (
             <div>
-                <ListType>
+                <ListType className="todo-list__list">
                     {listItems}
                 </ListType>
                 <span>

@@ -1,5 +1,7 @@
 // Loading dependencies.
 var webpack = require('webpack');
+var autoprefixer = require('autoprefixer');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 /**
  * Webpack configuration options.
@@ -10,12 +12,12 @@ var webpack = require('webpack');
  */
 module.exports = {
     entry: {
-        'js/bundle': './src/index.jsx',
-        'js/bundle.min': './src/index.jsx'
+        'bundle': './src/index.jsx',
+        'bundle.min': './src/index.jsx'
     },
     output: {
         path: './dist/',
-        filename: '[name].js'
+        filename: 'js/[name].js'
     },
     module: {
         loaders: [
@@ -23,10 +25,18 @@ module.exports = {
                 test: /\.(js|jsx)$/,
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel'
+            },
+            {
+                test: /\.scss$/,
+                exclude: /(node_modules|bower_components)/,
+                loader: ExtractTextPlugin.extract('css?-autoprefixer!postcss!sass')
             }
         ]
     },
     plugins: [
+        new ExtractTextPlugin('css/[name].css', {
+            allChunks: true
+        }),
         new webpack.SourceMapDevToolPlugin({
             filename: '[file].map',
             exclude: /\.min\.js$/
@@ -47,6 +57,23 @@ module.exports = {
         contentBase: './dist/',
         publicPath: '/',
         inline: true,
+        compress: true,
         port: 3000
+    },
+    sassLoader: {
+        outputStyle: 'compact',
+        precision: 3
+    },
+    postcss: function() {
+        return [
+            autoprefixer({
+                browsers: [
+                    'last 2 versions',
+                    'iOS >= 7.1',
+                    'Android >= 4'
+                ],
+                cascade: false
+            })
+        ];
     }
 };

@@ -1,0 +1,45 @@
+// Colour palettes which group similar colours as shades of a generic one.
+$palettes: (
+    scorpion: (
+        base: #5B5B5B
+    ),
+    white: (
+        base: #FFFFFF
+    )
+);
+
+// Collection of breakpoints used on the site.
+$bps: (
+    tabletUp: 768px
+);
+
+// Values of keylines / gutters used throughout the site.
+$keylines: (
+);
+
+// Values of max widths for major site components and the site itself.
+$max-widths: (
+    section: 102.4rem
+);
+
+// Values of z-index for site components.
+$z-index: (
+);
+
+// Collection of font stacks for use throughout the site via placeholders.
+$font-stack: (
+    headings: unquote("'Open Sans', Arial, sans-serif"),
+    body: unquote("'Open Sans', Arial, sans-serif")
+);
+
+%font-headings {
+    font-family: map-get($font-stack, headings);
+    font-weight: 700;
+    font-style: normal;
+}
+
+%font-body {
+    font-family: map-get($font-stack, body);
+    font-weight: 400;
+    font-style: normal;
+}
