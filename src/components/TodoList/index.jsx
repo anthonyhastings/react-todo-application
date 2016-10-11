@@ -13,22 +13,26 @@ class TodoList extends React.Component {
     render() {
         let ListType = `${this.props.listType}`;
 
+        let listItems = this.props.items.map((item) => {
+            return (
+                <li key={item.id} className={(item.completed) ? 'item--completed' : '' }>
+                    {item.text}
+                    <br />
+                    <button onClick={this.props.onToggleCompleted.bind(null, item)}>
+                        {(item.completed) ? 'Uncomplete' : 'Complete'}
+                    </button>
+                </li>
+            );
+        });
+
         return (
             <div>
                 <ListType>
-                    {this.props.items.map((item) => {
-                        return (
-                            <li key={item.id} className={(item.completed) ? 'item--completed' : '' }>
-                                {item.text}
-                                <br />
-                                <button onClick={this.props.onToggleCompleted.bind(null, item)}>
-                                    {(item.completed) ? 'Uncomplete' : 'Complete'}
-                                </button>
-                            </li>
-                        );
-                    })}
+                    {listItems}
                 </ListType>
-                <span>{this.props.items.length} item(s).</span>
+                <span>
+                    {this.props.items.length} item(s).
+                </span>
             </div>
         );
     }

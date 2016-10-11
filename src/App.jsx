@@ -34,7 +34,7 @@ class App extends React.Component {
         return (
             <div>
                 <h1>React: Todo List</h1>
-                <TodoForm addItem={this.addItem} />
+                <TodoForm onAddItem={this.addItem} />
                 <TodoList items={this.state.items} onToggleCompleted={this.toggleCompleted} />
             </div>
         );

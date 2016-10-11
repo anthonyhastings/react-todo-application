@@ -98,7 +98,8 @@ class TodoForm extends React.Component {
     resetState() {
         this.setState({
             dirty: false,
-            text: ''
+            text: '',
+            validity: null
         });
     }
 
@@ -129,7 +130,7 @@ class TodoForm extends React.Component {
         this.setDirty();
 
         if (this.setValidity()) {
-            this.props.addItem({
+            this.props.onAddItem({
                 id: Date.now(),
                 text: this.state.text,
                 completed: false
@@ -147,7 +148,7 @@ class TodoForm extends React.Component {
  * @type {Object}
  */
 TodoForm.propTypes = {
-    addItem: React.PropTypes.func.isRequired
+    onAddItem: React.PropTypes.func.isRequired
 };
 
 export default TodoForm;
