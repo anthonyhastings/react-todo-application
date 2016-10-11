@@ -1,7 +1,7 @@
 import React from 'react';
-import {render} from 'react-dom';
+import ReactDOM from 'react-dom';
 import App from './App';
 
-const app = render(<App />, document.querySelector('#app'));
+const app = ReactDOM.render(<App />, document.querySelector('#app'));
 
 console.info('Application:', app);

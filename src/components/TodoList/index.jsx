@@ -41,7 +41,7 @@ class TodoList extends React.Component {
  * @type {Object}
  */
 TodoList.propTypes = {
-    listType: React.PropTypes.string,
+    listType: React.PropTypes.oneOf(['ol', 'ul']),
     items: React.PropTypes.array.isRequired,
     onToggleCompleted: React.PropTypes.func.isRequired
 };
