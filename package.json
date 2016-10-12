@@ -7,10 +7,12 @@
   "private": true,
   "scripts": {
     "build": "npm run-script html && npm run-script webpack",
+    "build-production": "npm run-script html && npm run-script webpack -- --production",
+    "start": "webpack-dev-server",
+    "start-production": "npm run-script start -- --production",
     "html": "copyfiles -f src/*.html dist/",
     "lint": "eslint --ext .js --ext .jsx src/ webpack.config.js",
     "pretest": "npm run-script lint",
-    "start": "webpack-dev-server",
     "test": "karma start",
     "webpack": "webpack"
   },
@@ -45,6 +47,7 @@
     "sass-loader": "4.0.2",
     "sinon": "1.17.6",
     "webpack": "1.13.2",
-    "webpack-dev-server": "1.16.1"
+    "webpack-dev-server": "1.16.1",
+    "yargs": "6.0.0"
   }
 }

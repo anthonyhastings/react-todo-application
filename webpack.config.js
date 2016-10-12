@@ -1,4 +1,5 @@
 // Loading dependencies.
+var argv = require('yargs').argv;
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -10,7 +11,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
  *
  * @type {Object}
  */
-module.exports = {
+var webpackConfig = {
     entry: {
         'bundle': './src/index.jsx',
         'bundle.min': './src/index.jsx'
@@ -77,3 +78,14 @@ module.exports = {
         ];
     }
 };
+
+// Checking for production flag and, if present, adding environment variable.
+if (argv.production === true) {
+    webpackConfig.plugins.push(new webpack.DefinePlugin({
+        'process.env': {
+            NODE_ENV: JSON.stringify('production')
+        }
+    }));
+}
+
+module.exports = webpackConfig;
