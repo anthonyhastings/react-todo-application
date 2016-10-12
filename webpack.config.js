@@ -31,6 +31,10 @@ var webpackConfig = {
                 test: /\.scss$/,
                 exclude: /(node_modules|bower_components)/,
                 loader: ExtractTextPlugin.extract('css?-autoprefixer!postcss!sass')
+            },
+            {
+                test: /\.json$/,
+                loader: 'json'
             }
         ]
     },

@@ -36,7 +36,7 @@ class TodoList extends React.Component {
                 <ListType className="todo-list__list">
                     {listItems}
                 </ListType>
-                <span>
+                <span className="todo-list__count">
                     {this.props.items.length} item(s).
                 </span>
             </div>

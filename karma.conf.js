@@ -14,6 +14,14 @@ webpackConfig.module.loaders.forEach(function(entry) {
     }
 });
 
+// Enzyme uses conditional require calls, and Webpack needs to ignore these.
+webpackConfig.externals = {
+    'cheerio': 'window',
+    'react/addons': true,
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true
+};
+
 module.exports = function(config) {
     config.set({
         client: {
