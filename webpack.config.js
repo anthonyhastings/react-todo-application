@@ -23,7 +23,7 @@ var webpackConfig = {
     module: {
         loaders: [
             {
-                test: /\.(js|jsx)$/,
+                test: /\.jsx?$/,
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel'
             },

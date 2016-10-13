@@ -22,6 +22,13 @@ webpackConfig.externals = {
     'react/lib/ReactContext': true
 };
 
+// Add babel-istanbul code coverage specific settings to the webpack config.
+webpackConfig.module.loaders.push({
+    test: /\.jsx?$/,
+    exclude: /(node_modules|bower_components|\.spec\.jsx?|tests-wrapper\.js)/,
+    loader: 'babel-istanbul'
+});
+
 module.exports = function(config) {
     config.set({
         client: {
@@ -51,7 +58,19 @@ module.exports = function(config) {
             }
         },
 
-        reporters: ['progress'],
+        reporters: [
+            'progress',
+            'coverage'
+        ],
+
+        coverageReporter: {
+            dir: './test-results/',
+            reporters: [
+                {type: 'text'},
+                {type: 'text-summary'},
+                {type: 'html', subdir: 'html'}
+            ]
+        },
 
         browsers: ['PhantomJS'],
 
