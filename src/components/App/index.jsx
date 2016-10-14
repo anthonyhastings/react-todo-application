@@ -23,6 +23,7 @@ class App extends React.Component {
 
         this.addItem = this.addItem.bind(this);
         this.toggleCompleted = this.toggleCompleted.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
     }
 
     /**
@@ -35,8 +36,12 @@ class App extends React.Component {
         return (
             <div>
                 <h1>React: Todo List</h1>
+
                 <TodoForm onAddItem={this.addItem} />
-                <TodoList items={this.state.items} onToggleCompleted={this.toggleCompleted} />
+
+                <TodoList items={this.state.items}
+                          onToggleCompleted={this.toggleCompleted}
+                          onDeleteItem={this.deleteItem} />
             </div>
         );
     }
@@ -45,12 +50,32 @@ class App extends React.Component {
      * Creates a new array by concatenating the old array with the new item
      * that was passed to this function, then updates state.
      *
-     * @param {Object} newItem
+     * @param {Object} item
      */
-    addItem(newItem) {
+    addItem(item) {
         this.setState({
-            items: this.state.items.concat(newItem)
+            items: this.state.items.concat(item)
         });
+    }
+
+    /**
+     * Creates a new array and splices the desired item from it then updates
+     * state with the cloned, modified array.
+     *
+     * @param {Object} item
+     */
+    deleteItem(item) {
+        let itemIndex = this.state.items.indexOf(item);
+
+        if (itemIndex > -1) {
+            let itemsCopy = this.state.items.slice();
+
+            itemsCopy.splice(itemIndex, 1);
+
+            this.setState({
+                items: itemsCopy
+            });
+        }
     }
 
     /**

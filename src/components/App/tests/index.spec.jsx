@@ -24,6 +24,23 @@ describe('App component', function() {
         expect(this.wrapper.find(TodoList).length).to.equal(1);
     });
 
+    context('deleteItem()', function() {
+        it('should remove an item from the stack', function() {
+            expect(this.wrapper.state('items').indexOf(this.dummyItem)).to.equal(-1);
+            this.wrapper.instance().addItem(this.dummyItem);
+            expect(this.wrapper.state('items').indexOf(this.dummyItem)).to.be.above(-1);
+            this.wrapper.instance().deleteItem(this.dummyItem);
+            expect(this.wrapper.state('items').indexOf(this.dummyItem)).to.equal(-1);
+        });
+
+        it('should essentially no-op if an item is not found', function() {
+            let itemsCount = this.wrapper.state('items').length;
+
+            this.wrapper.instance().deleteItem('hello');
+            expect(this.wrapper.state('items').length).to.equal(itemsCount);
+        });
+    });
+
     it('addItem() should append given item onto stack', function() {
         expect(this.wrapper.state('items').length).to.equal(3);
         this.wrapper.instance().addItem(this.dummyItem);

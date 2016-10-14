@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 require('./styles/index.scss');
 
 class TodoList extends React.Component {
@@ -24,8 +25,13 @@ class TodoList extends React.Component {
                     className={className}>
                     {item.text}
                     <br />
-                    <button onClick={this.props.onToggleCompleted.bind(null, item)}>
+                    <button data-action="toggle"
+                            onClick={this.props.onToggleCompleted.bind(null, item)}>
                         {(item.completed) ? 'Uncomplete' : 'Complete'}
+                    </button>
+                    <button data-action="delete"
+                            onClick={this.props.onDeleteItem.bind(null, item)}>
+                        Delete
                     </button>
                 </li>
             );
@@ -34,7 +40,12 @@ class TodoList extends React.Component {
         return (
             <div>
                 <ListType className="todo-list__list">
-                    {listItems}
+                    <ReactCSSTransitionGroup
+                        transitionName="todo-list__list-item"
+                        transitionEnterTimeout={0}
+                        transitionLeaveTimeout={0}>
+                        {listItems}
+                    </ReactCSSTransitionGroup>
                 </ListType>
                 <span className="todo-list__count">
                     {this.props.items.length} item(s).
@@ -53,6 +64,7 @@ class TodoList extends React.Component {
 TodoList.propTypes = {
     listType: React.PropTypes.oneOf(['ol', 'ul']),
     items: React.PropTypes.array.isRequired,
+    onDeleteItem: React.PropTypes.func.isRequired,
     onToggleCompleted: React.PropTypes.func.isRequired
 };
 
