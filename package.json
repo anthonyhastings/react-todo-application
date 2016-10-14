@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "react": "15.3.2",
-    "react-dom": "15.3.2"
+    "react-dom": "15.3.2",
+    "react-addons-css-transition-group": "15.3.2"
   },
   "devDependencies": {
     "autoprefixer": "6.4.1",

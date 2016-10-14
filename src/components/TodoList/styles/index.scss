@@ -19,5 +19,25 @@
         .todo-list__list-item:not(:last-child) {
             margin-bottom: 1rem;
         }
+
+        // Whenever element is entering the DOM.
+        .todo-list__list-item-enter {
+            opacity: 0;
+
+            &.todo-list__list-item-enter-active {
+                opacity: 1;
+                transition: opacity 600ms;
+            }
+        }
+
+        // Whenever element is leaving the DOM.
+        .todo-list__list-item-leave {
+            opacity: 1;
+
+            &.todo-list__list-item-leave-active {
+                opacity: 0;
+                transition: opacity 1200ms;
+            }
+        }
     }
 }
