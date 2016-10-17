@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import update from 'react-addons-update';
 import TodoForm from '../TodoForm';
 import TodoList from '../TodoList';
@@ -31,18 +32,55 @@ class App extends React.Component {
      * Creates and returns a tree of React components that will eventually be
      * rendered into HTML.
      *
+     * Examines the route to determine which component needs to be rendered.
+     * This complexity exists because the components need to be given props
+     * that are functions of the App component, which is something that the
+     * react <Route /> element cannot do.
+     *
      * @return {Object}
      */
     render() {
+        let childComponent;
+
+        switch (this.props.location.pathname) {
+            case '/add':
+                childComponent = (
+                    <TodoForm onAddItem={this.addItem} />
+                );
+                break;
+            default:
+                childComponent = (
+                    <TodoList items={this.state.items}
+                              onToggleCompleted={this.toggleCompleted}
+                              onDeleteItem={this.deleteItem} />
+                );
+                break;
+        }
+
         return (
             <div>
-                <h1>React: Todo List</h1>
-
-                <TodoForm onAddItem={this.addItem} />
-
-                <TodoList items={this.state.items}
-                          onToggleCompleted={this.toggleCompleted}
-                          onDeleteItem={this.deleteItem} />
+                <header>
+                    <h1>React: Todo List</h1>
+                    <nav>
+                        <ul className="todo-list__nav-list">
+                            <li className="todo-list__nav-list-item">
+                                <Link to="/add"
+                                      className="todo-list__nav-link"
+                                      activeClassName="todo-list__nav-link--active">
+                                      Add Todo
+                                </Link>
+                            </li>
+                            <li className="todo-list__nav-list-item">
+                                <Link to="/list"
+                                      className="todo-list__nav-link"
+                                      activeClassName="todo-list__nav-link--active">
+                                      Todo Listings
+                                </Link>
+                            </li>
+                        </ul>
+                    </nav>
+                </header>
+                {childComponent}
             </div>
         );
     }
@@ -57,6 +95,8 @@ class App extends React.Component {
         this.setState({
             items: this.state.items.concat(item)
         });
+
+        this.context.router.push('/list');
     }
 
     /**
@@ -80,8 +120,9 @@ class App extends React.Component {
     }
 
     /**
-     * Toggles the `completed` boolean inside the item and then triggers an
-     * update of state to re-render the relevant DOM nodes.
+     * If item can be found in the stack, we create a deep copy of the items
+     * then toggle the `completed` boolean inside the relevant item and trigger
+     * a state update.
      *
      * @param {Object} item
      */
@@ -101,5 +142,24 @@ class App extends React.Component {
         }
     }
 }
+
+/**
+ * Denoting which props this component should expect along with their types.
+ * This allows react to validate all props used when creating a component.
+ *
+ * @type {Object}
+ */
+App.propTypes = {
+    location: React.PropTypes.object
+};
+
+/**
+ * Requests certain component contexts to be accesible within this component.
+ *
+ * @type {Object}
+ */
+App.contextTypes = {
+    router: React.PropTypes.object
+};
 
 export default App;

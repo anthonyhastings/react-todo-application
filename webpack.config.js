@@ -63,7 +63,8 @@ var webpackConfig = {
         publicPath: '/',
         inline: true,
         compress: true,
-        port: 3000
+        port: 3000,
+        historyApiFallback: true
     },
     sassLoader: {
         outputStyle: 'compact',
