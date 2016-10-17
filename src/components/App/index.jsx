@@ -1,4 +1,5 @@
 import React from 'react';
+import update from 'react-addons-update';
 import TodoForm from '../TodoForm';
 import TodoList from '../TodoList';
 require('./styles/index.scss');
@@ -85,11 +86,19 @@ class App extends React.Component {
      * @param {Object} item
      */
     toggleCompleted(item) {
-        item.completed = !item.completed;
+        let itemIndex = this.state.items.indexOf(item);
 
-        this.setState({
-            items: this.state.items
-        });
+        if (itemIndex > -1) {
+            let newItemsState = update(this.state.items, {
+                [itemIndex]: {
+                    completed: {$set: !item.completed}
+                }
+            });
+
+            this.setState({
+                items: newItemsState
+            });
+        }
     }
 }
 
