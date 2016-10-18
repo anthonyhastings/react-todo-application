@@ -37,7 +37,7 @@ class App extends React.Component {
      * that are functions of the App component, which is something that the
      * react <Route /> element cannot do.
      *
-     * @return {Object}
+     * @return {React.Element}
      */
     render() {
         let childComponent;

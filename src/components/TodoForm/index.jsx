@@ -25,7 +25,7 @@ class TodoForm extends React.Component {
      * Creates and returns a tree of React components that will eventually be
      * rendered into HTML.
      *
-     * @return {Object}
+     * @return {React.Element}
      */
     render() {
         return (
