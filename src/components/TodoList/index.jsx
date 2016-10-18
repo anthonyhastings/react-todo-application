@@ -7,14 +7,9 @@ class TodoList extends React.Component {
      * Creates and returns a tree of React components that will eventually be
      * rendered into HTML.
      *
-     * Uses a variable to house a dynamic node name. This is used in the JSX
-     * template where interpolating a node name isn't possible.
-     *
      * @return {Object}
      */
     render() {
-        let ListType = `${this.props.listType}`;
-
         let listItems = this.props.items.map((item) => {
             let className = 'todo-list__list-item';
 
@@ -39,14 +34,14 @@ class TodoList extends React.Component {
 
         return (
             <div>
-                <ListType className="todo-list__list">
-                    <ReactCSSTransitionGroup
-                        transitionName="todo-list__list-item"
-                        transitionEnterTimeout={0}
-                        transitionLeaveTimeout={0}>
-                        {listItems}
-                    </ReactCSSTransitionGroup>
-                </ListType>
+                <ReactCSSTransitionGroup
+                    component={this.props.listType}
+                    className="todo-list__list"
+                    transitionName="todo-list__list-item"
+                    transitionEnterTimeout={0}
+                    transitionLeaveTimeout={0}>
+                    {listItems}
+                </ReactCSSTransitionGroup>
                 <span className="todo-list__count">
                     {this.props.items.length} item(s).
                 </span>
