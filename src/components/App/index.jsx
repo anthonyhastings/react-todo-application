@@ -1,32 +1,78 @@
 import React from 'react';
 import {Link} from 'react-router';
-import update from 'react-addons-update';
+import TodoStore from '../../flux/store';
+import ActionCreator from '../../flux/action-creator';
 import TodoForm from '../TodoForm';
 import TodoList from '../TodoList';
 require('./styles/index.scss');
 
-class App extends React.Component {
+export default React.createClass({
     /**
-     * Defining initial state and binding functions on the prototype chain
-     * directly to the component with their context correctly set.
+     * Denoting which props this component should expect along with their types.
+     * This allows react to validate all props used when creating a component.
      *
-     * @param {Object} props
+     * @type {Object}
      */
-    constructor(props) {
-        super(props);
+    propTypes: {
+        location: React.PropTypes.object
+    },
 
-        this.state = {
-            items: [
-                {id: 1475673921806, text: 'Test Entry #1', completed: true},
-                {id: 1475673936180, text: 'Test Entry #2', completed: false},
-                {id: 1475673946340, text: 'Test Entry #3', completed: false}
-            ]
+    /**
+     * Requests certain component contexts to be accessible to this component.
+     *
+     * @type {Object}
+     */
+    contextTypes: {
+        router: React.PropTypes.object
+    },
+
+    /**
+     * Adding mixins for every store this view depends on. For the most part,
+     * only top level components will need to use FluxThis mixins.
+     *
+     * @type {Array}
+     */
+    mixins: [TodoStore.mixin],
+
+    /**
+     * Translates public store methods into internal component state.
+     * This function will be called when dependant stores fire change events.
+     *
+     * @return {Object}
+     */
+    getStateFromStores() {
+        return {
+            todos: TodoStore.getTodos()
         };
+    },
 
-        this.addItem = this.addItem.bind(this);
-        this.toggleCompleted = this.toggleCompleted.bind(this);
-        this.deleteItem = this.deleteItem.bind(this);
-    }
+    /**
+     * Triggers a call to the ActionCreator to add a Todo.
+     *
+     * @param {String} text
+     */
+    handleTodoAdd(text) {
+        ActionCreator.createTodo(text);
+        this.context.router.push('/list');
+    },
+
+    /**
+     * Triggers a call to the ActionCreator to remove a Todo.
+     *
+     * @param {String} id
+     */
+    handleTodoRemove(id) {
+        ActionCreator.removeTodo(id);
+    },
+
+    /**
+     * Triggers a call to the ActionCreator to toggle a Todo.
+     *
+     * @param {String} id
+     */
+    handleTodoToggle(id) {
+        ActionCreator.toggleTodo(id);
+    },
 
     /**
      * Creates and returns a tree of React components that will eventually be
@@ -45,14 +91,14 @@ class App extends React.Component {
         switch (this.props.location.pathname) {
             case '/add':
                 childComponent = (
-                    <TodoForm onAddItem={this.addItem} />
+                    <TodoForm onAddItem={this.handleTodoAdd} />
                 );
                 break;
             default:
                 childComponent = (
-                    <TodoList items={this.state.items}
-                              onToggleCompleted={this.toggleCompleted}
-                              onDeleteItem={this.deleteItem} />
+                    <TodoList todos={this.state.todos}
+                              onToggleCompleted={this.handleTodoToggle}
+                              onDeleteItem={this.handleTodoRemove} />
                 );
                 break;
         }
@@ -84,82 +130,4 @@ class App extends React.Component {
             </div>
         );
     }
-
-    /**
-     * Creates a new array by concatenating the old array with the new item
-     * that was passed to this function, then updates state.
-     *
-     * @param {Object} item
-     */
-    addItem(item) {
-        this.setState({
-            items: this.state.items.concat(item)
-        });
-
-        this.context.router.push('/list');
-    }
-
-    /**
-     * Creates a new array and splices the desired item from it then updates
-     * state with the cloned, modified array.
-     *
-     * @param {Object} item
-     */
-    deleteItem(item) {
-        let itemIndex = this.state.items.indexOf(item);
-
-        if (itemIndex > -1) {
-            let itemsCopy = this.state.items.slice();
-
-            itemsCopy.splice(itemIndex, 1);
-
-            this.setState({
-                items: itemsCopy
-            });
-        }
-    }
-
-    /**
-     * If item can be found in the stack, we create a deep copy of the items
-     * then toggle the `completed` boolean inside the relevant item and trigger
-     * a state update.
-     *
-     * @param {Object} item
-     */
-    toggleCompleted(item) {
-        let itemIndex = this.state.items.indexOf(item);
-
-        if (itemIndex > -1) {
-            let newItemsState = update(this.state.items, {
-                [itemIndex]: {
-                    completed: {$set: !item.completed}
-                }
-            });
-
-            this.setState({
-                items: newItemsState
-            });
-        }
-    }
-}
-
-/**
- * Denoting which props this component should expect along with their types.
- * This allows react to validate all props used when creating a component.
- *
- * @type {Object}
- */
-App.propTypes = {
-    location: React.PropTypes.object
-};
-
-/**
- * Requests certain component contexts to be accesible within this component.
- *
- * @type {Object}
- */
-App.contextTypes = {
-    router: React.PropTypes.object
-};
-
-export default App;
+});
