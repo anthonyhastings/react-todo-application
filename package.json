@@ -17,6 +17,7 @@
     "webpack": "webpack"
   },
   "dependencies": {
+    "uuid": "2.0.3",
     "fluxthis": "2.9.0",
     "react": "15.3.2",
     "react-addons-css-transition-group": "15.3.2",

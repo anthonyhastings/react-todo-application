@@ -15,11 +15,7 @@ export default new ImmutableReducerStore({
      */
     init() {
         this.defaultState = Immutable.fromJS({
-            todos: [
-                {id: 1475673921806, text: 'Test Entry #1', completed: true},
-                {id: 1475673936180, text: 'Test Entry #2', completed: false},
-                {id: 1475673946340, text: 'Test Entry #3', completed: false}
-            ]
+            todos: []
         });
 
         this.bindActions(
@@ -57,15 +53,13 @@ export default new ImmutableReducerStore({
          * new Todo, and then updates store state.
          *
          * @param {ImmutableMap} state
-         * @param {Object} action
-         * @returns {Object}
+         * @param {Object} payload
+         * @returns {ImmutableMap}
          */
-        addTodo(state, action) {
-            console.info('store::addTodo', state, action);
-
+        addTodo(state, payload) {
             let todo = Immutable.fromJS({
-                id: action.id,
-                text: action.text,
+                id: payload.id,
+                text: payload.text,
                 completed: false
             });
 
@@ -75,18 +69,16 @@ export default new ImmutableReducerStore({
         },
 
         /**
-         * Removes the specified identifier from the ImmutableList (causing a
-         * new list to be made).
+         * Removes the specified Todo from a copy of the state data then the
+         * copy is returned to be used as the new state.
          *
          * @param {ImmutableMap} state
-         * @param {Object} action
-         * @returns {Object}
+         * @param {String} id
+         * @returns {ImmutableMap}
          */
-        removeTodo(state, action) {
-            console.info('store::removeTodo', state, action);
-
+        removeTodo(state, id) {
             let index = this.state.get('todos').findIndex((todo) => {
-                return todo.get('id') === action.id;
+                return todo.get('id') === id;
             });
 
             if (index > -1) {
@@ -99,18 +91,17 @@ export default new ImmutableReducerStore({
         },
 
         /**
-         * Toggles the completed flag of the specified Todo and saves the
-         * resulting new ImmutableList of Todo Items.
+         * Toggles the completed flag of the specified Todo which gets cloned
+         * and placed into a new set of Todos. This gets set onto a copy of
+         * the store's state.
          *
          * @param {ImmutableMap} state
-         * @param {Object} action
-         * @returns {Object}
+         * @param {String} id
+         * @returns {ImmutableMap}
          */
-        toggleTodo(state, action) {
-            console.info('store::toggleTodo', state, action);
-
+        toggleTodo(state, id) {
             let index = this.state.get('todos').findIndex((todo) => {
-                return todo.get('id') === action.id;
+                return todo.get('id') === id;
             });
 
             return this.state.update('todos', (todos) => {
