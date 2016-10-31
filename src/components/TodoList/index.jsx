@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import cx from 'classnames';
 require('./styles/index.scss');
 
 /**
@@ -10,10 +11,14 @@ require('./styles/index.scss');
  * @return {React.Element}
  */
 function TodoList(props) {
-    let defaultClassName = 'todo-list__list-item';
+    const defaultClassName = 'todo-list__list-item';
 
-    let listItems = props.todos.map((item) => {
-        let className = defaultClassName += (item.get('completed')) ? ' item--completed' : '';
+    const listItems = props.todos.map((item) => {
+        const className = cx({
+            [defaultClassName]: true,
+            [`${defaultClassName}--completed`]: item.get('completed'),
+            [`${defaultClassName}--incompleted`]: !item.get('completed')
+        });
 
         return (
             <li key={item.get('id')}
