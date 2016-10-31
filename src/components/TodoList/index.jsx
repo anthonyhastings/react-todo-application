@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 require('./styles/index.scss');
 
 /**
@@ -11,20 +12,20 @@ require('./styles/index.scss');
 function TodoList(props) {
     let defaultClassName = 'todo-list__list-item';
 
-    let listItems = props.items.map((item) => {
-        let className = defaultClassName += (item.completed) ? ' item--completed' : '';
+    let listItems = props.todos.map((item) => {
+        let className = defaultClassName += (item.get('completed')) ? ' item--completed' : '';
 
         return (
-            <li key={item.id}
+            <li key={item.get('id')}
                 className={className}>
-                {item.text}
+                {item.get('text')}
                 <br />
                 <button data-action="toggle"
-                        onClick={props.onToggleCompleted.bind(null, item)}>
-                    {(item.completed) ? 'Uncomplete' : 'Complete'}
+                        onClick={props.onToggleCompleted.bind(null, item.get('id'))}>
+                    {(item.get('completed')) ? 'Uncomplete' : 'Complete'}
                 </button>
                 <button data-action="delete"
-                        onClick={props.onDeleteItem.bind(null, item)}>
+                        onClick={props.onDeleteItem.bind(null, item.get('id'))}>
                     Delete
                 </button>
             </li>
@@ -42,7 +43,7 @@ function TodoList(props) {
                 {listItems}
             </ReactCSSTransitionGroup>
             <span className="todo-list__count">
-                {props.items.length} item(s).
+                {props.todos.size} item(s).
             </span>
         </div>
     );
@@ -56,7 +57,7 @@ function TodoList(props) {
  */
 TodoList.propTypes = {
     listType: React.PropTypes.oneOf(['ol', 'ul']),
-    items: React.PropTypes.array.isRequired,
+    todos: ImmutablePropTypes.list.isRequired,
     onDeleteItem: React.PropTypes.func.isRequired,
     onToggleCompleted: React.PropTypes.func.isRequired
 };
