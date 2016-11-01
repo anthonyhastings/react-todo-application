@@ -37,6 +37,14 @@ function TodoList(props) {
         );
     });
 
+    const completedItems = props.todos.toJS().reduce((previous, current) => {
+        return (current.completed) ? previous + 1 : previous;
+    }, 0);
+
+    const uncompletedItems = props.todos.toJS().reduce((previous, current) => {
+        return (!current.completed) ? previous + 1 : previous;
+    }, 0);
+
     return (
         <div>
             <ReactCSSTransitionGroup
@@ -48,7 +56,8 @@ function TodoList(props) {
                 {listItems}
             </ReactCSSTransitionGroup>
             <span className="todo-list__count">
-                {props.todos.size} item(s).
+                {props.todos.size} item(s).<br />
+                ({completedItems} Completed / {uncompletedItems} Uncompleted)
             </span>
         </div>
     );
