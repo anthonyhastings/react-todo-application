@@ -1,4 +1,5 @@
 // Loading dependencies.
+var argv = require('yargs').argv;
 var webpackConfig = require('./webpack.config');
 
 // Ensure that any entry bundles pre-defined in the config are forgotten about.
@@ -28,6 +29,16 @@ webpackConfig.module.loaders.push({
     exclude: /(node_modules|bower_components|\.spec\.jsx?|tests-wrapper\.js)/,
     loader: 'babel-istanbul'
 });
+
+// Setting default values for Karma to operate in single-run mode.
+var autoWatch = false;
+var singleRun = true;
+
+// Overriding single-run mode if 'watch' CLI argument has been specified.
+if (argv.watch === true) {
+    autoWatch = true;
+    singleRun = false;
+}
 
 module.exports = function(config) {
     config.set({
@@ -76,9 +87,9 @@ module.exports = function(config) {
 
         port: 9876,
 
-        autoWatch: false,
+        autoWatch: autoWatch,
 
-        singleRun: true,
+        singleRun: singleRun,
 
         logLevel: config.LOG_INFO
     });
