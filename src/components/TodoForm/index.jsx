@@ -138,12 +138,7 @@ class TodoForm extends React.Component {
         this.setDirty();
 
         if (this.setValidity()) {
-            this.props.onAddItem({
-                id: Date.now(),
-                text: this.state.text,
-                completed: false
-            });
-
+            this.props.onAddItem(this.state.text);
             this.resetState();
         }
     }

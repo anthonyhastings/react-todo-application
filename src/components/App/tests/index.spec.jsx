@@ -3,6 +3,7 @@ import {shallow} from 'enzyme';
 import App from '../index';
 import TodoForm from '../../TodoForm';
 import TodoList from '../../TodoList';
+import ActionCreator from '../../../flux/action-creator';
 
 describe('App component', function() {
     /**
@@ -21,12 +22,6 @@ describe('App component', function() {
     beforeEach(function() {
         this.sinonSandbox = sinon.sandbox.create();
 
-        this.dummyItem = {
-            id: 1234567890,
-            text: 'Test Entry #4',
-            completed: false
-        };
-
         this.wrapper = createWrapper();
     });
 
@@ -44,39 +39,37 @@ describe('App component', function() {
         });
     });
 
-    context('deleteItem()', function() {
-        it('should remove an item from the stack', function() {
-            expect(this.wrapper.state('items').indexOf(this.dummyItem)).to.equal(-1);
-            this.wrapper.instance().addItem(this.dummyItem);
-            expect(this.wrapper.state('items').indexOf(this.dummyItem)).to.be.above(-1);
-            this.wrapper.instance().deleteItem(this.dummyItem);
-            expect(this.wrapper.state('items').indexOf(this.dummyItem)).to.equal(-1);
-        });
+    it('handleTodoAdd() should call appropriate action creator method', function() {
+        let testValue = 'Pick up milk.';
 
-        it('should essentially no-op if an item is not found', function() {
-            let itemsCount = this.wrapper.state('items').length;
+        this.sinonSandbox.stub(ActionCreator, 'createTodo');
 
-            this.wrapper.instance().deleteItem('hello');
-            expect(this.wrapper.state('items').length).to.equal(itemsCount);
-        });
-    });
-
-    it('addItem() should append given item onto stack', function() {
-        expect(this.wrapper.state('items').length).to.equal(3);
-        this.wrapper.instance().addItem(this.dummyItem);
-        expect(this.wrapper.state('items').length).to.equal(4);
-        expect(this.wrapper.state('items')[3]).to.deep.equal(this.dummyItem);
+        expect(ActionCreator.createTodo.callCount).to.equal(0);
+        this.wrapper.instance().handleTodoAdd(testValue);
+        expect(ActionCreator.createTodo.callCount).to.equal(1);
+        expect(ActionCreator.createTodo.lastCall.args[0].text).to.equal(testValue);
         expect(this.wrapper.instance().context.router.push.callCount).to.equal(1);
     });
 
-    it('toggleCompleted() should flip boolean accordingly', function() {
-        this.wrapper.instance().addItem(this.dummyItem);
-        expect(this.wrapper.state('items')[3].completed).to.equal(false);
+    it('handleTodoRemove() should call appropriate action creator method', function() {
+        let testValue = '123456789';
 
-        this.wrapper.instance().toggleCompleted(this.wrapper.state('items')[3]);
-        expect(this.wrapper.state('items')[3].completed).to.equal(true);
+        this.sinonSandbox.stub(ActionCreator, 'removeTodo');
 
-        this.wrapper.instance().toggleCompleted(this.wrapper.state('items')[3]);
-        expect(this.wrapper.state('items')[3].completed).to.equal(false);
+        expect(ActionCreator.removeTodo.callCount).to.equal(0);
+        this.wrapper.instance().handleTodoRemove(testValue);
+        expect(ActionCreator.removeTodo.callCount).to.equal(1);
+        expect(ActionCreator.removeTodo.lastCall.args[0].id).to.equal(testValue);
+    });
+
+    it('handleTodoToggle() should call appropriate action creator method', function() {
+        let testValue = '123456789';
+
+        this.sinonSandbox.stub(ActionCreator, 'toggleTodo');
+
+        expect(ActionCreator.toggleTodo.callCount).to.equal(0);
+        this.wrapper.instance().handleTodoToggle(testValue);
+        expect(ActionCreator.toggleTodo.callCount).to.equal(1);
+        expect(ActionCreator.toggleTodo.lastCall.args[0].id).to.equal(testValue);
     });
 });

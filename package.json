@@ -17,11 +17,14 @@
     "webpack": "webpack"
   },
   "dependencies": {
+    "classnames": "2.2.5",
+    "fluxthis": "2.9.0",
     "react": "15.3.2",
-    "react-dom": "15.3.2",
     "react-addons-css-transition-group": "15.3.2",
-    "react-addons-update": "15.3.2",
-    "react-router": "2.8.1"
+    "react-dom": "15.3.2",
+    "react-immutable-proptypes": "2.1.0",
+    "react-router": "2.8.1",
+    "uuid": "2.0.3"
   },
   "devDependencies": {
     "autoprefixer": "6.4.1",

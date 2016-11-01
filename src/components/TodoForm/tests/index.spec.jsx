@@ -5,7 +5,6 @@ import TodoForm from '../index';
 describe('TodoForm component', function() {
     beforeEach(function() {
         this.sinonSandbox = sinon.sandbox.create();
-
         this.addItem = this.sinonSandbox.stub();
 
         this.wrapper = mount(<TodoForm onAddItem={this.addItem} />);
@@ -132,7 +131,7 @@ describe('TodoForm component', function() {
         this.wrapper.setState({text: testValue});
         form.simulate('submit');
         expect(this.addItem.callCount).to.equal(1);
-        expect(this.addItem.lastCall.args[0].text).to.equal(testValue);
+        expect(this.addItem.lastCall.args[0]).to.equal(testValue);
         expect(this.wrapper.state('text')).to.equal('');
     });
 });
