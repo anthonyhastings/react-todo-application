@@ -22,10 +22,10 @@ export default new ActionCreator({
             id: ActionCreator.PayloadTypes.string.isRequired,
             text: ActionCreator.PayloadTypes.string.isRequired
         }).isRequired,
-        createPayload: function(text) {
+        createPayload: function(initialPayload) {
             return {
                 id: uuid.v4(),
-                text: text
+                text: initialPayload.text
             };
         }
     },
@@ -37,7 +37,9 @@ export default new ActionCreator({
      */
     removeTodo: {
         type: ActionTypes.REMOVE_TODO,
-        payload: ActionCreator.PayloadTypes.string.isRequired
+        payload: ActionCreator.PayloadTypes.shape({
+            id: ActionCreator.PayloadTypes.string.isRequired
+        }).isRequired
     },
 
     /**
@@ -47,6 +49,8 @@ export default new ActionCreator({
      */
     toggleTodo: {
         type: ActionTypes.TOGGLE_TODO,
-        payload: ActionCreator.PayloadTypes.string.isRequired
+        payload: ActionCreator.PayloadTypes.shape({
+            id: ActionCreator.PayloadTypes.string.isRequired
+        }).isRequired
     }
 });

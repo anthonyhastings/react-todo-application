@@ -73,12 +73,12 @@ export default new ImmutableReducerStore({
          * copy is returned to be used as the new state.
          *
          * @param {ImmutableMap} state
-         * @param {String} id
+         * @param {Object} payload
          * @returns {ImmutableMap}
          */
-        removeTodo(state, id) {
+        removeTodo(state, payload) {
             let index = this.state.get('todos').findIndex((todo) => {
-                return todo.get('id') === id;
+                return todo.get('id') === payload.id;
             });
 
             if (index > -1) {
@@ -96,12 +96,12 @@ export default new ImmutableReducerStore({
          * the store's state.
          *
          * @param {ImmutableMap} state
-         * @param {String} id
+         * @param {Object} payload
          * @returns {ImmutableMap}
          */
-        toggleTodo(state, id) {
+        toggleTodo(state, payload) {
             let index = this.state.get('todos').findIndex((todo) => {
-                return todo.get('id') === id;
+                return todo.get('id') === payload.id;
             });
 
             return this.state.update('todos', (todos) => {

@@ -52,7 +52,7 @@ export default React.createClass({
      * @param {String} text
      */
     handleTodoAdd(text) {
-        ActionCreator.createTodo(text);
+        ActionCreator.createTodo({text});
         this.context.router.push('/list');
     },
 
@@ -62,7 +62,7 @@ export default React.createClass({
      * @param {String} id
      */
     handleTodoRemove(id) {
-        ActionCreator.removeTodo(id);
+        ActionCreator.removeTodo({id});
     },
 
     /**
@@ -71,7 +71,7 @@ export default React.createClass({
      * @param {String} id
      */
     handleTodoToggle(id) {
-        ActionCreator.toggleTodo(id);
+        ActionCreator.toggleTodo({id});
     },
 
     /**
