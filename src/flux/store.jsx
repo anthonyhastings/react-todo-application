@@ -12,16 +12,27 @@ export default new ImmutableReducerStore({
 
     /**
      * Sets up default state of the store and binds actions to private methods.
+     *
+     * @type {Function}
      */
     init() {
         this.defaultState = Immutable.fromJS({
-            todos: []
+            todos: [],
+            status: {
+                pendingUpdate: false,
+                isFetched: false
+            }
         });
 
         this.bindActions(
-            ActionTypes.ADD_TODO, this.addTodo,
-            ActionTypes.REMOVE_TODO, this.removeTodo,
-            ActionTypes.TOGGLE_TODO, this.toggleTodo
+            ActionTypes.ADD_TODO_PENDING, this.setPending,
+            ActionTypes.ADD_TODO_SUCCESS, this.addTodo,
+            ActionTypes.GET_TODOS_PENDING, this.setPending,
+            ActionTypes.GET_TODOS_SUCCESS, this.setTodos,
+            ActionTypes.UPDATE_TODO_PENDING, this.setPending,
+            ActionTypes.UPDATE_TODO_SUCCESS, this.updateTodo,
+            ActionTypes.DELETE_TODO_PENDING, this.setPending,
+            ActionTypes.DELETE_TODO_SUCCESS, this.removeTodo
         );
     },
 
@@ -38,6 +49,15 @@ export default new ImmutableReducerStore({
          */
         getTodos() {
             return this.state.get('todos');
+        },
+
+        /**
+         * Returns the status object.
+         *
+         * @return {Object}
+         */
+        getStatus() {
+            return this.state.get('status');
         }
     },
 
@@ -49,45 +69,38 @@ export default new ImmutableReducerStore({
      */
     private: {
         /**
-         * Creates a new Todo, creates a new set of Todos which now contain the
-         * new Todo, and then updates store state.
+         * Pushes a Todo from the server onto a copy of the Todo stack then
+         * updates state accordingly. It will also update the status object
+         * to signify fetching is complete.
          *
          * @param {ImmutableMap} state
-         * @param {Object} payload
+         * @param {Object} response
          * @returns {ImmutableMap}
          */
-        addTodo(state, payload) {
-            let todo = Immutable.fromJS({
-                id: payload.id,
-                text: payload.text,
-                completed: false
-            });
+        addTodo(state, {response}) {
+            const pushToStack = (todos) => todos.push(Immutable.fromJS(response.body));
 
-            return this.state.update('todos', (todos) => {
-                return todos.push(todo);
-            });
+            return (
+                state.update('todos', pushToStack)
+                     .setIn(['status', 'pendingUpdate'], false)
+            );
         },
 
         /**
-         * Removes the specified Todo from a copy of the state data then the
-         * copy is returned to be used as the new state.
+         * Fetches Todos from the server and sets them on the state. It will
+         * also update the status object to signify fetching is complete.
          *
          * @param {ImmutableMap} state
-         * @param {Object} payload
+         * @param {Object} response
          * @returns {ImmutableMap}
          */
-        removeTodo(state, payload) {
-            let index = this.state.get('todos').findIndex((todo) => {
-                return todo.get('id') === payload.id;
-            });
+        setTodos(state, {response}) {
+            const newStatus = {pendingUpdate: false, isFetched: true};
 
-            if (index > -1) {
-                return this.state.update('todos', (todos) => {
-                    return todos.remove(index);
-                });
-            } else {
-                return this.state;
-            }
+            return (
+                state.set('todos', Immutable.fromJS(response.body))
+                     .set('status', Immutable.fromJS(newStatus))
+            );
         },
 
         /**
@@ -96,19 +109,51 @@ export default new ImmutableReducerStore({
          * the store's state.
          *
          * @param {ImmutableMap} state
-         * @param {Object} payload
+         * @param {Object} response
          * @returns {ImmutableMap}
          */
-        toggleTodo(state, payload) {
-            let index = this.state.get('todos').findIndex((todo) => {
-                return todo.get('id') === payload.id;
+        updateTodo(state, {response}) {
+            const todoIndex = state.get('todos').findIndex((todo) => {
+                return todo.get('id') === response.body.id;
             });
 
-            return this.state.update('todos', (todos) => {
-                return todos.update(index, (todo) => {
-                    return todo.set('completed', !todo.get('completed'));
+            return (
+                state.setIn(['todos', todoIndex], Immutable.fromJS(response.body))
+                     .setIn(['status', 'pendingUpdate'], true)
+            );
+        },
+
+        /**
+         * Removes the specified todo from a copy of the Todos stack and sets
+         * this onto the state. It will also update the status object to
+         * signify fetching is complete.
+         *
+         * @param {ImmutableMap} state
+         * @param {Object} response
+         * @returns {ImmutableMap}
+         */
+        removeTodo(state, {response}) {
+            const filterTodo = (todos) => {
+                return todos.filter((todo) => {
+                    return todo.get('id') !== response.body.id;
                 });
-            });
+            };
+
+            return (
+                state.update('todos', filterTodo)
+                     .setIn(['status', 'pendingUpdate'], false)
+            );
+        },
+
+        /**
+         * Updates the status object to signify that an update is pending
+         * completion.
+         *
+         * @param {ImmutableMap} state
+         * @returns {ImmutableMap}
+         */
+        setPending(state) {
+            return state.setIn(['status', 'pendingUpdate'], true);
         }
     }
 });

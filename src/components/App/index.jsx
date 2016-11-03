@@ -35,6 +35,14 @@ export default React.createClass({
     mixins: [TodoStore.mixin],
 
     /**
+     * Whenever the component is about to be mounted into the DOM we request
+     * an action be triggered to fetch Todos.
+     */
+    componentWillMount() {
+        ActionCreator.getTodos();
+    },
+
+    /**
      * Translates public store methods into internal component state.
      * This function will be called when dependant stores fire change events.
      *
@@ -59,19 +67,19 @@ export default React.createClass({
     /**
      * Triggers a call to the ActionCreator to remove a Todo.
      *
-     * @param {String} id
+     * @param {Object} todo
      */
-    handleTodoRemove(id) {
-        ActionCreator.removeTodo({id});
+    handleTodoRemove(todo) {
+        ActionCreator.removeTodo({todo});
     },
 
     /**
-     * Triggers a call to the ActionCreator to toggle a Todo.
+     * Triggers a call to the ActionCreator to update a Todo.
      *
-     * @param {String} id
+     * @param {Object} todo
      */
-    handleTodoToggle(id) {
-        ActionCreator.toggleTodo({id});
+    handleTodoUpdate(todo) {
+        ActionCreator.updateTodo({todo});
     },
 
     /**
@@ -97,7 +105,7 @@ export default React.createClass({
             default:
                 childComponent = (
                     <TodoList todos={this.state.todos}
-                              onToggleCompleted={this.handleTodoToggle}
+                              onUpdateItem={this.handleTodoUpdate}
                               onDeleteItem={this.handleTodoRemove} />
                 );
                 break;
