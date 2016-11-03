@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 import TodoStore from '../../flux/store';
-import ActionCreator from '../../flux/action-creator';
+import TodoAPIActionCreator from '../../flux/action-creator';
 import TodoForm from '../TodoForm';
 import TodoList from '../TodoList';
 require('./styles/index.scss');
@@ -39,7 +39,7 @@ export default React.createClass({
      * an action be triggered to fetch Todos.
      */
     componentWillMount() {
-        ActionCreator.getTodos();
+        TodoAPIActionCreator.getTodos();
     },
 
     /**
@@ -60,7 +60,7 @@ export default React.createClass({
      * @param {String} text
      */
     handleTodoAdd(text) {
-        ActionCreator.createTodo({text});
+        TodoAPIActionCreator.createTodo({text});
         this.context.router.push('/list');
     },
 
@@ -70,7 +70,7 @@ export default React.createClass({
      * @param {Object} todo
      */
     handleTodoRemove(todo) {
-        ActionCreator.removeTodo({todo});
+        TodoAPIActionCreator.removeTodo({todo});
     },
 
     /**
@@ -79,7 +79,7 @@ export default React.createClass({
      * @param {Object} todo
      */
     handleTodoUpdate(todo) {
-        ActionCreator.updateTodo({todo});
+        TodoAPIActionCreator.updateTodo({todo});
     },
 
     /**
