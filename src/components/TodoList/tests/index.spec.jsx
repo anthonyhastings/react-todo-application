@@ -13,11 +13,11 @@ describe('TodoList component', function() {
 
         this.sinonSandbox = sinon.sandbox.create();
         this.deleteItem = this.sinonSandbox.stub();
-        this.toggleCompleted = this.sinonSandbox.stub();
+        this.updateItem = this.sinonSandbox.stub();
 
         this.wrapper = shallow(<TodoList todos={this.todos}
                                          onDeleteItem={this.deleteItem}
-                                         onToggleCompleted={this.toggleCompleted} />);
+                                         onUpdateItem={this.updateItem} />);
     });
 
     afterEach(function() {
@@ -35,7 +35,7 @@ describe('TodoList component', function() {
     it('should output correct overall count', function() {
         let renderedCount = this.wrapper.find('.todo-list__count');
 
-        expect(renderedCount.text()).to.equal(`${this.todos.size} item(s).`);
+        expect(renderedCount.text()).to.include(`${this.todos.size} item(s).`);
     });
 
     it('delete button should trigger supplied click handler when button is clicked', function() {
@@ -49,8 +49,8 @@ describe('TodoList component', function() {
     it('toggle button should trigger supplied click handler when button is clicked', function() {
         let toggleButton = this.wrapper.find('[data-action="toggle"]').first();
 
-        expect(this.toggleCompleted.callCount).to.equal(0);
+        expect(this.updateItem.callCount).to.equal(0);
         toggleButton.simulate('click');
-        expect(this.toggleCompleted.callCount).to.equal(1);
+        expect(this.updateItem.callCount).to.equal(1);
     });
 });
