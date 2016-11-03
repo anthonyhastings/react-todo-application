@@ -14,7 +14,7 @@
     "html": "copyfiles -f src/*.html dist/",
     "lint": "eslint --ext .js --ext .jsx src/ webpack.config.js",
     "pretest": "npm run-script lint",
-    "test": "karma start",
+    "test": "karma start ./karma/conf.js",
     "webpack": "webpack"
   },
   "dependencies": {

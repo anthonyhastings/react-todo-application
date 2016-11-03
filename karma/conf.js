@@ -1,6 +1,6 @@
 // Loading dependencies.
 var argv = require('yargs').argv;
-var webpackConfig = require('./webpack.config');
+var webpackConfig = require('../webpack.config');
 
 // Ensure that any entry bundles pre-defined in the config are forgotten about.
 webpackConfig.entry = {};
@@ -54,10 +54,13 @@ module.exports = function(config) {
             'sinon'
         ],
 
-        files: ['tests-wrapper.js'],
+        files: [
+            './polyfills.js',
+            './tests-wrapper.js'
+        ],
 
         preprocessors: {
-            'tests-wrapper.js': ['webpack']
+            './tests-wrapper.js': ['webpack']
         },
 
         webpack: webpackConfig,
@@ -75,7 +78,7 @@ module.exports = function(config) {
         ],
 
         coverageReporter: {
-            dir: './test-results/',
+            dir: '../test-results/',
             reporters: [
                 {type: 'text'},
                 {type: 'text-summary'},
