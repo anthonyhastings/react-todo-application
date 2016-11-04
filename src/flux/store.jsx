@@ -119,7 +119,7 @@ export default new ImmutableReducerStore({
 
             return (
                 state.setIn(['todos', todoIndex], Immutable.fromJS(response.body))
-                     .setIn(['status', 'pendingUpdate'], true)
+                     .setIn(['status', 'pendingUpdate'], false)
             );
         },
 
