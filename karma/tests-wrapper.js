@@ -12,7 +12,7 @@
  */
 
 // Creates a require context to the top-level JS folder.
-var testsContext = require.context('./src/', true, /.+\.spec\.jsx?$/);
+var testsContext = require.context('../src/', true, /.+\.spec\.jsx?$/);
 
 // Takes the matching files found from the context above and passes them
 // into the context function, which converts the paths into require calls.

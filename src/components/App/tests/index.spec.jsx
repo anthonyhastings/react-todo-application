@@ -3,7 +3,7 @@ import {shallow} from 'enzyme';
 import App from '../index';
 import TodoForm from '../../TodoForm';
 import TodoList from '../../TodoList';
-import ActionCreator from '../../../flux/action-creator';
+import TodoAPIActionCreator from '../../../flux/action-creator';
 
 describe('App component', function() {
     /**
@@ -42,34 +42,34 @@ describe('App component', function() {
     it('handleTodoAdd() should call appropriate action creator method', function() {
         let testValue = 'Pick up milk.';
 
-        this.sinonSandbox.stub(ActionCreator, 'createTodo');
+        this.sinonSandbox.stub(TodoAPIActionCreator, 'createTodo');
 
-        expect(ActionCreator.createTodo.callCount).to.equal(0);
+        expect(TodoAPIActionCreator.createTodo.callCount).to.equal(0);
         this.wrapper.instance().handleTodoAdd(testValue);
-        expect(ActionCreator.createTodo.callCount).to.equal(1);
-        expect(ActionCreator.createTodo.lastCall.args[0].text).to.equal(testValue);
+        expect(TodoAPIActionCreator.createTodo.callCount).to.equal(1);
+        expect(TodoAPIActionCreator.createTodo.lastCall.args[0].text).to.equal(testValue);
         expect(this.wrapper.instance().context.router.push.callCount).to.equal(1);
     });
 
     it('handleTodoRemove() should call appropriate action creator method', function() {
-        let testValue = '123456789';
+        let testValue = {id: '123456789', text: 'Pick up milk.', completed: false};
 
-        this.sinonSandbox.stub(ActionCreator, 'removeTodo');
+        this.sinonSandbox.stub(TodoAPIActionCreator, 'removeTodo');
 
-        expect(ActionCreator.removeTodo.callCount).to.equal(0);
+        expect(TodoAPIActionCreator.removeTodo.callCount).to.equal(0);
         this.wrapper.instance().handleTodoRemove(testValue);
-        expect(ActionCreator.removeTodo.callCount).to.equal(1);
-        expect(ActionCreator.removeTodo.lastCall.args[0].id).to.equal(testValue);
+        expect(TodoAPIActionCreator.removeTodo.callCount).to.equal(1);
+        expect(TodoAPIActionCreator.removeTodo.lastCall.args[0].todo.id).to.equal(testValue.id);
     });
 
     it('handleTodoToggle() should call appropriate action creator method', function() {
-        let testValue = '123456789';
+        let testValue = {id: '123456789', text: 'Pick up milk.', completed: false};
 
-        this.sinonSandbox.stub(ActionCreator, 'toggleTodo');
+        this.sinonSandbox.stub(TodoAPIActionCreator, 'updateTodo');
 
-        expect(ActionCreator.toggleTodo.callCount).to.equal(0);
-        this.wrapper.instance().handleTodoToggle(testValue);
-        expect(ActionCreator.toggleTodo.callCount).to.equal(1);
-        expect(ActionCreator.toggleTodo.lastCall.args[0].id).to.equal(testValue);
+        expect(TodoAPIActionCreator.updateTodo.callCount).to.equal(0);
+        this.wrapper.instance().handleTodoUpdate(testValue);
+        expect(TodoAPIActionCreator.updateTodo.callCount).to.equal(1);
+        expect(TodoAPIActionCreator.updateTodo.lastCall.args[0].todo.id).to.equal(testValue.id);
     });
 });

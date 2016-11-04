@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 import TodoStore from '../../flux/store';
-import ActionCreator from '../../flux/action-creator';
+import TodoAPIActionCreator from '../../flux/action-creator';
 import TodoForm from '../TodoForm';
 import TodoList from '../TodoList';
 require('./styles/index.scss');
@@ -35,6 +35,14 @@ export default React.createClass({
     mixins: [TodoStore.mixin],
 
     /**
+     * Whenever the component is about to be mounted into the DOM we request
+     * an action be triggered to fetch Todos.
+     */
+    componentWillMount() {
+        TodoAPIActionCreator.getTodos();
+    },
+
+    /**
      * Translates public store methods into internal component state.
      * This function will be called when dependant stores fire change events.
      *
@@ -52,26 +60,26 @@ export default React.createClass({
      * @param {String} text
      */
     handleTodoAdd(text) {
-        ActionCreator.createTodo({text});
+        TodoAPIActionCreator.createTodo({text});
         this.context.router.push('/list');
     },
 
     /**
      * Triggers a call to the ActionCreator to remove a Todo.
      *
-     * @param {String} id
+     * @param {Object} todo
      */
-    handleTodoRemove(id) {
-        ActionCreator.removeTodo({id});
+    handleTodoRemove(todo) {
+        TodoAPIActionCreator.removeTodo({todo});
     },
 
     /**
-     * Triggers a call to the ActionCreator to toggle a Todo.
+     * Triggers a call to the ActionCreator to update a Todo.
      *
-     * @param {String} id
+     * @param {Object} todo
      */
-    handleTodoToggle(id) {
-        ActionCreator.toggleTodo({id});
+    handleTodoUpdate(todo) {
+        TodoAPIActionCreator.updateTodo({todo});
     },
 
     /**
@@ -97,7 +105,7 @@ export default React.createClass({
             default:
                 childComponent = (
                     <TodoList todos={this.state.todos}
-                              onToggleCompleted={this.handleTodoToggle}
+                              onUpdateItem={this.handleTodoUpdate}
                               onDeleteItem={this.handleTodoRemove} />
                 );
                 break;

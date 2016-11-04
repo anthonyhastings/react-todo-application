@@ -2,9 +2,39 @@ import Immutable from 'immutable';
 import TodoStore from '../store';
 import ActionTypes from '../actions';
 
+const status = () => {
+    return TodoStore.getStatus();
+};
+
 describe('TodoStore', function() {
     beforeEach(function() {
         TodoStore.TestUtils.reset();
+    });
+
+    describe('status', function() {
+        const setPending = () => {
+            TodoStore.TestUtils.mockDispatch({
+                type: ActionTypes.ADD_TODO_PENDING
+            });
+        };
+
+        it('should not be flagged as having an update pending by default', function() {
+            expect(status().get('pendingUpdate')).to.equal(false);
+        });
+
+        it('should not be flagged as having been fetched by default', function() {
+            expect(status().get('isFetched')).to.equal(false);
+        });
+
+        describe('setting status', function() {
+            beforeEach(function() {
+                setPending();
+            });
+
+            it('should flag as pending when triggered', function() {
+                expect(status().get('pendingUpdate')).to.equal(true);
+            });
+        });
     });
 
     describe('todos', function() {
@@ -12,42 +42,48 @@ describe('TodoStore', function() {
             return TodoStore.getTodos();
         };
 
-        const createTodo = (todo) => {
+        const createTodo = (response) => {
             TodoStore.TestUtils.mockDispatch({
-                type: ActionTypes.ADD_TODO,
-                payload: todo
+                type: ActionTypes.ADD_TODO_SUCCESS,
+                payload: response
             });
         };
 
-        const removeTodo = (todo) => {
+        const setTodos = (response) => {
             TodoStore.TestUtils.mockDispatch({
-                type: ActionTypes.REMOVE_TODO,
-                payload: todo
+                type: ActionTypes.GET_TODOS_SUCCESS,
+                payload: response
             });
         };
 
-        const toggleTodo = (todo) => {
+        const updateTodo = (response) => {
             TodoStore.TestUtils.mockDispatch({
-                type: ActionTypes.TOGGLE_TODO,
-                payload: todo
+                type: ActionTypes.UPDATE_TODO_SUCCESS,
+                payload: response
             });
         };
 
-        it('should have no todos by default', function() {
-            expect(TodoStore.getTodos().size).to.equal(0);
+        const deleteTodo = (response) => {
+            TodoStore.TestUtils.mockDispatch({
+                type: ActionTypes.DELETE_TODO_SUCCESS,
+                payload: response
+            });
+        };
+
+        it('should have no Todos by default', function() {
+            expect(todos().size).to.equal(0);
         });
 
-        describe('getting todos', function() {
-            it('will return an immutable list', function() {
-                expect(Immutable.List.isList(todos())).to.equal(true);
-            });
-        });
-
-        describe('adding a todo', function() {
+        describe('Creating a Todo', function() {
             beforeEach(function() {
                 createTodo({
-                    id: '1',
-                    text: 'buy cheese'
+                    response: {
+                        body: {
+                            id: '1',
+                            text: 'buy cheese',
+                            completed: false
+                        }
+                    }
                 });
             });
 
@@ -55,64 +91,159 @@ describe('TodoStore', function() {
                 expect(todos().size).to.equal(1);
             });
 
-            it('stores the new todo id', function() {
+            it('stores the new Todo id', function() {
                 expect(todos().first().get('id')).to.equal('1');
             });
 
-            it('stores the new todo text', function() {
+            it('stores the new Todo text', function() {
                 expect(todos().first().get('text')).to.equal('buy cheese');
             });
 
-            it('stores the new todo as uncompleted by default', function() {
+            it('stores the new Todo as uncompleted by default', function() {
                 expect(todos().first().get('completed')).to.equal(false);
+            });
+
+            it('sets the status back to no longer pending an update', function() {
+                expect(status().get('pendingUpdate')).to.equal(false);
             });
         });
 
-        describe('removing a todo', function() {
+        describe('Reading Todos', function() {
+            beforeEach(function() {
+                setTodos({
+                    response: {
+                        body: [
+                            {
+                                id: '1',
+                                text: 'buy cheese',
+                                completed: false
+                            },
+                            {
+                                id: '2',
+                                text: 'buy milk',
+                                completed: true
+                            }
+                        ]
+                    }
+                });
+            });
+
+            it('will return an immutable list', function() {
+                expect(Immutable.List.isList(todos())).to.equal(true);
+            });
+
+            it('sets the status back to no longer pending an update', function() {
+                expect(status().get('pendingUpdate')).to.equal(false);
+            });
+
+            it('sets the status to signify fetching has occurred', function() {
+                expect(status().get('isFetched')).to.equal(true);
+            });
+
+            it('saves all Todos', function() {
+                expect(todos().size).to.equal(2);
+            });
+
+            it('stores the first Todo correctly', function() {
+                expect(todos().first().toJS()).to.deep.equal({
+                    id: '1',
+                    text: 'buy cheese',
+                    completed: false
+                });
+            });
+
+            it('stores the second Todo correctly', function() {
+                expect(todos().get(1).toJS()).to.deep.equal({
+                    id: '2',
+                    text: 'buy milk',
+                    completed: true
+                });
+            });
+        });
+
+        describe('Updating a Todo', function() {
             beforeEach(function() {
                 createTodo({
+                    response: {
+                        body: {
+                            id: '1',
+                            text: 'buy cheese',
+                            completed: false
+                        }
+                    }
+                });
+
+                updateTodo({
+                    response: {
+                        body: {
+                            id: '1',
+                            text: 'buy cheese!!!',
+                            completed: true
+                        }
+                    }
+                });
+            });
+
+            it('sets the status back to no longer pending an update', function() {
+                expect(status().get('pendingUpdate')).to.equal(false);
+            });
+
+            it('updates the Todo correctly', function() {
+                expect(todos().first().toJS()).to.deep.equal({
                     id: '1',
-                    text: 'buy cheese'
+                    text: 'buy cheese!!!',
+                    completed: true
+                });
+            });
+        });
+
+        describe('Deleting a todo', function() {
+            beforeEach(function() {
+                createTodo({
+                    response: {
+                        body: {
+                            id: '1',
+                            text: 'buy cheese',
+                            completed: false
+                        }
+                    }
                 });
 
-                removeTodo({
-                    id: '1'
+                createTodo({
+                    response: {
+                        body: {
+                            id: '2',
+                            text: 'buy milk',
+                            completed: true
+                        }
+                    }
                 });
             });
 
-            it('will delete it from the stack', function() {
-                expect(todos().size).to.equal(0);
+            it('Todos should be initially present', function() {
+                expect(todos().size).to.equal(2);
             });
 
-            describe('will no-op', function() {
+            describe('then upon triggering action', function() {
                 beforeEach(function() {
-                    removeTodo({
-                        id: '123'
+                    deleteTodo({
+                        response: {
+                            body: {
+                                id: '1',
+                                text: 'buy cheese',
+                                completed: false
+                            }
+                        }
                     });
                 });
 
-                it('when a non-existent is supplied', function() {
-                    expect(TodoStore.getTodos().size).to.equal(0);
-                });
-            });
-        });
-
-        describe('toggling a todo', function() {
-            beforeEach(function() {
-                createTodo({
-                    id: '1',
-                    text: 'buy cheese'
+                it('sets the status back to no longer pending an update', function() {
+                    expect(status().get('pendingUpdate')).to.equal(false);
                 });
 
-                this.preToggledValue = todos().first().get('completed');
-
-                toggleTodo({
-                    id: '1'
+                it('will delete it from the stack', function() {
+                    expect(todos().size).to.equal(1);
                 });
-            });
-
-            it('will flip its value', function() {
-                expect(todos().first().get('completed')).to.equal(!this.preToggledValue);
             });
         });
     });

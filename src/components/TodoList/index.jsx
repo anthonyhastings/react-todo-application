@@ -26,11 +26,11 @@ function TodoList(props) {
                 {item.get('text')}
                 <br />
                 <button data-action="toggle"
-                        onClick={props.onToggleCompleted.bind(null, item.get('id'))}>
+                        onClick={props.onUpdateItem.bind(null, item)}>
                     {(item.get('completed')) ? 'Uncomplete' : 'Complete'}
                 </button>
                 <button data-action="delete"
-                        onClick={props.onDeleteItem.bind(null, item.get('id'))}>
+                        onClick={props.onDeleteItem.bind(null, item)}>
                     Delete
                 </button>
             </li>
@@ -73,7 +73,7 @@ TodoList.propTypes = {
     listType: React.PropTypes.oneOf(['ol', 'ul']),
     todos: ImmutablePropTypes.list.isRequired,
     onDeleteItem: React.PropTypes.func.isRequired,
-    onToggleCompleted: React.PropTypes.func.isRequired
+    onUpdateItem: React.PropTypes.func.isRequired
 };
 
 /**
